@@ -1,1 +1,157 @@
-<!-- Aquí el contenido de tu página empleos.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>DevJobs - Empleos</title>
+    <meta charset="UTF-8" />
+    <meta   name="description" content="Listado con empleos y filtros para encontrar el trabajo de tus sueños."/>
+
+    <link rel="stylesheet" href="./styles.css" />
+</head>   
+<body>
+    <header>
+        <h1>
+        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="16 18 22 12 16 6"></polyline>
+        <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+        DevJobs</h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="empleos.html">Empleos</a>
+            <a href="">Empresas</a> 
+            <a href="">Salarios</a>
+        </nav>
+        <div>
+            <a href="">Subir CV</a>
+            <a href="">Iniciar sesión</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="jobs-search">  
+            <h1>Encuentra tu próximo trabajo</h1>
+            <p>Explora miles de oportunidades en el sector tecnológico.</p>
+            <form role="search">
+                <div class="search-bar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" 
+                class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" 
+                fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                <input required type="text" placeholder="Buscar trabajos, empresas o habilidades"> 
+                </div>
+                <div class="search-filters">
+                    <select name="tecnologia">
+                        <option>Tecnología</option>
+                        <option>JavaScript</option>
+                        <option>React</option>
+                        <option>Python</option>
+                    </select>
+
+                    <select name="ubicacion">
+                         <option>Ubicación</option>
+                         <option>Remoto</option>
+                         <option>Barcelona</option>
+                         <option>Madrid</option>
+                         <option>Sevilla</option>
+                    </select>
+                    <select name="Tipo de contrato">
+                        <option>Tipo de contrato</option>
+                         <option>Fijo</option>
+                         <option>Temporal</option>
+                         <option>Freelance</option>
+                    </select>           
+                    <select name="Nivel de experiencia">
+                        <option>Nivel de experiencia</option>
+                         <option>Junior</option>
+                         <option>Senior</option>
+                         <option>Lead</option>
+                    </select>                               
+                </div>
+            </form>
+                
+        </section>
+        <section>
+            <header>
+                <h2>Resultados de búsqueda</h2>
+            </header>
+            <div class="jobs-listings">
+                <article class="job-listing-card">
+                    <div>
+                        <h3>Ingeniero de Software</h3>
+                        <small>Tech Solutions Inc</small>
+                        <p>Remoto</p>
+                        <p>Buscamos un ingeniero de software con experiencia en desarrollo web y conocimientos de JavaScript, react y Node.js. El candidato ideal debe ser capaz de trabajar en equipo y tener buenas habilidades de comunicación.</p>
+                    </div>
+                        <button class="button-apply-job">Aplicar</button>
+                </article>
+                <article class="job-listing-card">
+                    <div>
+                        <h3>Desarrollador Frontend</h3>
+                        <small>Innovatech</small>
+                        <p>Barcelona</p>
+                        <p>Estamos buscando un desarrollador frontend con experiencia en React y CSS. El candidato ideal debe tener un buen ojo para el diseño y ser capaz de crear interfaces de usuario atractivas y funcionales.</p>
+                    </div>
+                        <button class="button-apply-job">Aplicar</button>
+                </article>
+                <article class="job-listing-card">
+                    <div>
+                        <h3>Desarrollador Backend</h3>
+                        <small>DataCorp</small>
+                        <p>Madrid</p>
+                        <p>Se requiere un desarrollador backend con experiencia en Python y Django. El candidato ideal debe ser capaz de diseñar y mantener APIs robustas y escalables, así como trabajar en colaboración con el equipo frontend.</p>
+                    </div>
+                        <button class="button-apply-job">Aplicar</button>
+                </article>  
+                <article class="job-listing-card">
+                    <div>
+                        <h3>Ingeniero de DevOps</h3>
+                        <small>CloudTech</small>
+                        <p>Sevilla</p>
+                        <p>Buscamos un ingeniero de DevOps con experiencia en AWS y Docker. El candidato ideal debe ser capaz de automatizar procesos de despliegue y mantener la infraestructura en la nube de manera eficiente.</p>
+                    </div>
+                        <button class="button-apply-job">Aplicar</button>
+                </article>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <!-- Paginación MVP -->
+        <nav class="pagination" aria-label="Navegación de páginas">
+  
+        <!-- Botón Primera -->
+        <a href="#" class="btn-text" aria-label="Ir a la primera página">Primera</a>
+
+        <!-- Chevron Anterior (SVG chevron-left) -->
+        <a href="#" aria-label="Página anterior">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M15 6l-6 6l6 6" />
+            </svg>
+        </a>
+
+        <!-- Números de página -->
+        <a href="#">1</a>
+        <a href="#">2</a>
+        <a href="#">3</a>
+        <!-- Página 4 activa por defecto -->
+        <a class="is-active" href="#" aria-current="page">4</a>
+        <a href="#">5</a>
+        <a href="#">6</a>
+        <a href="#">7</a>
+
+        <!-- Chevron Siguiente (SVG chevron-right) -->
+        <a href="#" aria-label="Página siguiente">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M9 6l6 6l-6 6" />
+             </svg>
+        </a>
+
+        <!-- Botón Última -->
+        <a href="#" class="btn-text" aria-label="Ir a la última página">Última</a>
+
+        </nav>
+    </footer>
+</body>
+</html>
