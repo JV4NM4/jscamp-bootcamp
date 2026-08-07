@@ -4,7 +4,8 @@
     <title>DevJobs - Empleos</title>
     <meta charset="UTF-8" />
     <meta   name="description" content="Listado con empleos y filtros para encontrar el trabajo de tus sueños."/>
-
+    <!-- Esto nos permite que la página se vea bien en distintos dispositivos -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./styles.css" />
 </head>   
 <body>
@@ -18,13 +19,15 @@
         DevJobs</h1>
         <nav>
             <a href="index.html">Inicio</a>
-            <a href="empleos.html">Empleos</a>
-            <a href="">Empresas</a> 
-            <a href="">Salarios</a>
+            <!-- Usamos aria-current="page" para indicar que estamos es la página actual -->
+            <a href="empleos.html" aria-current="page">Empleos</a>
+            <!-- Siempre que no tengamos un link activo, usamos href="#" para indicar que no hay ningún link -->
+            <a href="#">Empresas</a> 
+            <a href="#">Salarios</a>
         </nav>
         <div>
-            <a href="">Subir CV</a>
-            <a href="">Iniciar sesión</a>
+            <a href="#">Subir CV</a>
+            <a href="#">Iniciar sesión</a>
         </div>
     </header>
 
@@ -38,14 +41,17 @@
                 fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" 
                 class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" 
                 fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-                <input required type="text" placeholder="Buscar trabajos, empresas o habilidades"> 
+                <!-- Siempre que no tengamos un `label` asociado a un input. Usaremos `aria-label` para dar contexto a los lectores de pantalla para qué se utiliza el input -->
+                <input required arial-label="Buscar trabajos, empresas o habilidades" type="text" placeholder="Buscar trabajos, empresas o habilidades">
                 </div>
                 <div class="search-filters">
-                    <select name="tecnologia">
-                        <option>Tecnología</option>
-                        <option>JavaScript</option>
-                        <option>React</option>
-                        <option>Python</option>
+                    <!-- Lo mismo, en caso de no tener un `label` asociado a un select, usaremos `aria-label` para dar contexto a los lectores de pantalla para qué se utiliza el select -->
+                    <select aria-label="Filtrar por Tecnología" name="tecnologia"></select>
+                        <!-- Los options siempre deben tener un valor asociado para que el select funcione, luego por JavaScript más adelante veremos como -->
+                        <option value="tecnologia">Tecnología</option>
+                        <option value="JavaScript">JavaScript</option>
+                        <option value="React">React</option>
+                        <option value="Python">Python</option>
                     </select>
 
                     <select name="ubicacion">
@@ -55,13 +61,14 @@
                          <option>Madrid</option>
                          <option>Sevilla</option>
                     </select>
-                    <select name="Tipo de contrato">
+                    <!-- No se pueden agregar espacios en las propiedades `name` de un select, lo mismo para las propiedades `value` de los options -->
+                    <select name="tipo-de-contrato">
                         <option>Tipo de contrato</option>
                          <option>Fijo</option>
                          <option>Temporal</option>
                          <option>Freelance</option>
                     </select>           
-                    <select name="Nivel de experiencia">
+                    <select name="nivel-de-experiencia">
                         <option>Nivel de experiencia</option>
                          <option>Junior</option>
                          <option>Senior</option>
