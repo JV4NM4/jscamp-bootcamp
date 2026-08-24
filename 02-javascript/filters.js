@@ -3,8 +3,13 @@ import { allJobs, renderJobs } from './fetch-data.js';
 let currentPage = 1;
 
 // Captura elementos del HTML
-const searchInput = document.querySelector('.search-bar input');
-const levelSelect = document.querySelector('#filter-experience');
+/* Evitemos este tipo de selectores, si necesitamos acceder a un elemento para darle una funcionalidad, es mejor manejarnos por `id` */
+// const searchInput = document.querySelector('.search-bar input');
+const searchInput = document.getElementById('empleos-search-input');
+/* Si ya vamos a seleccionar por `id`, entonces usemos `getElementById` */
+const filterLocation = document.getElementById('filter-location');
+const filterExperience = document.getElementById('filter-type');
+const levelSelect = document.getElementById('filter-experience');
 const filterTechnology = document.getElementById('filter-technology');
 
 // Buscador por título
