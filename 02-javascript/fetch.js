@@ -26,9 +26,17 @@ export function renderJobs(jobsToRender, currentPage = 1) {
   jobsToShow.forEach(job => {
     const article = document.createElement('article');
     article.className = 'job-listing-card';
-    article.dataset.modalidad = job.data.modalidad;
+    /* Es una opción, lo agregamos para que te quede de ejemplo, lo qur hiciste está perfecto! La intención de esto es que puedas ver diferentes formas de hacer lo mismo, en este caso con un enfoque más funcional y menos imperativo */
+    handleAddDataAttributes(article, [
+      ['empresa', job.empresa],
+      ['ubicacion', job.ubicacion],
+      ['modalidad', job.modalidad],
+      ['nivel', job.nivel],
+      ['technology', job.technology],
+    ]);
+    /* article.dataset.modalidad = job.data.modalidad;
     article.dataset.nivel = job.data.nivel;
-    article.dataset.technology = job.data.technology;
+    article.dataset.technology = job.data.technology; */
 
     const textWrapper = document.createElement('div');
     const title = document.createElement('h3');
@@ -76,3 +84,14 @@ fetch('./data.json')
     renderJobs(allJobs, 1);
   })
   .catch(error => console.error('Error al cargar el JSON:', error));
+
+/* --- */
+/* Una cosa que podemos hacer es crear handlers, para simplificar la lectura del código dentro de funciones (al leer el nombre de la función ya sabes que hace sin tener que leer el código) */
+
+const handleAddDataAttributes = (element, dataAttributes = []) => {
+  dataAttributes.forEach(([attribute, value]) => {
+    element.dataset[attribute] = value
+  });
+
+  return element
+}
