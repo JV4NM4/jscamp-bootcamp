@@ -7,9 +7,11 @@
     <!-- Esto nos permite que la página se vea bien en distintos dispositivos -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./styles.css" />
+    <!-- Faltó agregar `apply-button.js` -->
+    <script type="module" src="apply-button.js"></script>
     <script type="module" src="avatar.js"></script>
-    <script type="module" src="filters.js" defer></script>
-    <script type="module" src="fetch.js" defer></script>
+    <script type="module" src="filters.js"></script>
+    <script type="module" src="fetch.js"></script>
 </head>   
 <body>
     <header>
@@ -45,10 +47,12 @@
                 class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" 
                 fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
                 <!-- Siempre que no tengamos un `label` asociado a un input. Usaremos `aria-label` para dar contexto a los lectores de pantalla para qué se utiliza el input -->
-                <input required aria-label="Buscar trabajos, empresas o habilidades" type="text" placeholder="Buscar trabajos, empresas o habilidades">
+                 <!-- No hace falta un `required` en este caso, porque podemos buscar por filtro sin necesidad de que sea obligatorio escribir algo en el input -->
+                <input aria-label="Buscar trabajos, empresas o habilidades" type="text" placeholder="Buscar trabajos, empresas o habilidades" id="empleos-search-input">
                 </div>
                 <div class="search-filters">
-                    <select id="filter-technology" aria-label="Filtrar por Tecnología" name="tecnologia"  multiple>
+                    <!-- Si lo dejamos como `multiple`, rompemos el estilo del select y no funciona correctamente el filtro -->
+                    <select id="filter-technology" aria-label="Filtrar por Tecnología" name="tecnologia">
                         <option value="">Tecnología</option>
                         <option value="javascript">JavaScript</option>
                         <option value="react">React</option>
