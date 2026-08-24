@@ -104,6 +104,7 @@ header {
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
+  flex-wrap: wrap; /* Esto es para mejorar el responsive. Aunque se puede mejorar aún más */
 
   h2 {
     font-size: 1.25rem;
