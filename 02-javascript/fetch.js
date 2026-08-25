@@ -30,8 +30,8 @@ export function renderJobs(jobsToRender, currentPage = 1) {
     handleAddDataAttributes(article, [
       ['empresa', job.empresa],
       ['ubicacion', job.ubicacion],
-      ['modalidad', job.modalidad],
-      ['nivel', job.nivel],
+      ['modalidad', job.data.modalidad],
+      ['nivel', job.data.nivel],
       ['technology', job.technology],
     ]);
     /* article.dataset.modalidad = job.data.modalidad;
