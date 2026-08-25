@@ -7,7 +7,11 @@
     <!-- Esto nos permite que la página se vea bien en distintos dispositivos -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./styles.css" />
-    <script type="module" src="script.js"></script>
+    <!-- Faltó agregar `apply-button.js` -->
+    <script type="module" src="apply-button.js"></script>
+    <script type="module" src="avatar.js"></script>
+    <script type="module" src="filters.js"></script>
+    <script type="module" src="fetch.js"></script>
 </head>   
 <body>
     <header>
@@ -28,7 +32,7 @@
         </nav>
         <div>
             <a href="#">Subir CV</a>
-            <a href="#">Iniciar sesión</a>
+            <devjobs-avatar username="midudev" size="40"></devjobs-avatar>
         </div>
     </header>
 
@@ -43,12 +47,12 @@
                 class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" 
                 fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
                 <!-- Siempre que no tengamos un `label` asociado a un input. Usaremos `aria-label` para dar contexto a los lectores de pantalla para qué se utiliza el input -->
-                <input required aria-label="Buscar trabajos, empresas o habilidades" type="text" placeholder="Buscar trabajos, empresas o habilidades">
+                 <!-- No hace falta un `required` en este caso, porque podemos buscar por filtro sin necesidad de que sea obligatorio escribir algo en el input -->
+                <input aria-label="Buscar trabajos, empresas o habilidades" type="text" placeholder="Buscar trabajos, empresas o habilidades" id="empleos-search-input">
                 </div>
                 <div class="search-filters">
-                    <!-- Lo mismo, en caso de no tener un `label` asociado a un select, usaremos `aria-label` para dar contexto a los lectores de pantalla para qué se utiliza el select -->
+                    <!-- Si lo dejamos como `multiple`, rompemos el estilo del select y no funciona correctamente el filtro -->
                     <select id="filter-technology" aria-label="Filtrar por Tecnología" name="tecnologia">
-                        <!-- Los options siempre deben tener un valor asociado para que el select funcione, luego por JavaScript más adelante veremos como -->
                         <option value="">Tecnología</option>
                         <option value="javascript">JavaScript</option>
                         <option value="react">React</option>
@@ -69,11 +73,11 @@
                          <option value="temporal">Temporal</option>
                          <option value="freelance">Freelance</option>
                     </select>           
-                    <select id="filter-experience"    aria-label="Filtrar por nivel de experiencia"   name="nivel-de-experiencia">
+                    <select id="filter-level"    aria-label="Filtrar por nivel de experiencia"   name="nivel-de-experiencia">
                         <option value="">Nivel de experiencia</option>
                          <option value="junior">Junior</option>
+                         <option value="mid-level">Mid-Level</option>
                          <option value="senior">Senior</option>
-                         <option value="lead">Lead</option>
                     </select>                               
                 </div>
             </form>
@@ -83,43 +87,9 @@
             <header>
                 <h2>Resultados de búsqueda</h2>
             </header>
+            <p id="resultados-contador"></p>
             <div class="jobs-listings">
-                <article class="job-listing-card">
-                    <div>
-                        <h3>Ingeniero de Software</h3>
-                        <small>Tech Solutions Inc</small>
-                        <p>Remoto</p>
-                        <p>Buscamos un ingeniero de software con experiencia en desarrollo web y conocimientos de JavaScript, react y Node.js. El candidato ideal debe ser capaz de trabajar en equipo y tener buenas habilidades de comunicación.</p>
-                    </div>
-                        <button class="button-apply-job">Aplicar</button>
-                </article>
-                <article class="job-listing-card">
-                    <div>
-                        <h3>Desarrollador Frontend</h3>
-                        <small>Innovatech</small>
-                        <p>Barcelona</p>
-                        <p>Estamos buscando un desarrollador frontend con experiencia en React y CSS. El candidato ideal debe tener un buen ojo para el diseño y ser capaz de crear interfaces de usuario atractivas y funcionales.</p>
-                    </div>
-                        <button class="button-apply-job">Aplicar</button>
-                </article>
-                <article class="job-listing-card">
-                    <div>
-                        <h3>Desarrollador Backend</h3>
-                        <small>DataCorp</small>
-                        <p>Madrid</p>
-                        <p>Se requiere un desarrollador backend con experiencia en Python y Django. El candidato ideal debe ser capaz de diseñar y mantener APIs robustas y escalables, así como trabajar en colaboración con el equipo frontend.</p>
-                    </div>
-                        <button class="button-apply-job">Aplicar</button>
-                </article>  
-                <article class="job-listing-card">
-                    <div>
-                        <h3>Ingeniero de DevOps</h3>
-                        <small>CloudTech</small>
-                        <p>Sevilla</p>
-                        <p>Buscamos un ingeniero de DevOps con experiencia en AWS y Docker. El candidato ideal debe ser capaz de automatizar procesos de despliegue y mantener la infraestructura en la nube de manera eficiente.</p>
-                    </div>
-                        <button class="button-apply-job">Aplicar</button>
-                </article>
+               
             </div>
         </section>
     </main>
