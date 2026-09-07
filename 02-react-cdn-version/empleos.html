@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>DevJobs - Empleos</title>
+    <meta charset="UTF-8" />
+    <meta   name="description" content="Listado con empleos y filtros para encontrar el trabajo de tus sueños."/>
+    <!-- Esto nos permite que la página se vea bien en distintos dispositivos -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="avatar.js"></script>
+    <script type="module" src="filters.js" defer></script>
+    <script type="module" src="fetch.js" defer></script>
+</head>   
+<body>
+    <header>
+        <h1>
+        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="16 18 22 12 16 6"></polyline>
+        <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+        DevJobs</h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <!-- Usamos aria-current="page" para indicar que estamos es la página actual -->
+            <a href="empleos.html" aria-current="page">Empleos</a>
+            <!-- Siempre que no tengamos un link activo, usamos href="#" para indicar que no hay ningún link -->
+            <a href="#">Empresas</a> 
+            <a href="#">Salarios</a>
+        </nav>
+        <div>
+            <a href="#">Subir CV</a>
+            <devjobs-avatar username="midudev" size="40"></devjobs-avatar>
+        </div>
+    </header>
+
+    <main>
+        <section class="jobs-search">  
+            <h1>Encuentra tu próximo trabajo</h1>
+            <p>Explora miles de oportunidades en el sector tecnológico.</p>
+            <form role="search">
+                <div class="search-bar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" 
+                class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" 
+                fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                <!-- Siempre que no tengamos un `label` asociado a un input. Usaremos `aria-label` para dar contexto a los lectores de pantalla para qué se utiliza el input -->
+                <input required aria-label="Buscar trabajos, empresas o habilidades" type="text" placeholder="Buscar trabajos, empresas o habilidades">
+                </div>
+                <div class="search-filters">
+                    <select id="filter-technology" aria-label="Filtrar por Tecnología" name="tecnologia"  multiple>
+                        <option value="">Tecnología</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="react">React</option>
+                        <option value="python">Python</option>
+                    </select>
+
+                    <select id="filter-location"    aria-label="Filtrar por ubicación" name="ubicacion">
+                         <option value="">Ubicación</option>
+                         <option value="remoto">Remoto</option>
+                         <option value="barcelona">Barcelona</option>
+                         <option value="madrid">Madrid</option>
+                         <option value="sevilla">Sevilla</option>
+                    </select>
+                    <!-- No se pueden agregar espacios en las propiedades `name` de un select, lo mismo para las propiedades `value` de los options -->
+                    <select id="filter-type"    aria-label="Filtrar por tipo de contrato"  name="tipo-de-contrato">
+                        <option value="">Tipo de contrato</option>
+                         <option value="fijo">Fijo</option>
+                         <option value="temporal">Temporal</option>
+                         <option value="freelance">Freelance</option>
+                    </select>           
+                    <select id="filter-level"    aria-label="Filtrar por nivel de experiencia"   name="nivel-de-experiencia">
+                        <option value="">Nivel de experiencia</option>
+                         <option value="junior">Junior</option>
+                         <option value="mid-level">Mid-Level</option>
+                         <option value="senior">Senior</option>
+                    </select>                               
+                </div>
+            </form>
+                
+        </section>
+        <section>
+            <header>
+                <h2>Resultados de búsqueda</h2>
+            </header>
+            <p id="resultados-contador"></p>
+            <div class="jobs-listings">
+               
+            </div>
+        </section>
+    </main>
+    <footer>
+        <!-- Paginación MVP -->
+        <nav class="pagination" aria-label="Navegación de páginas">
+  
+        <!-- Botón Primera -->
+        <a href="#" class="btn-text" aria-label="Ir a la primera página">Primera</a>
+
+        <!-- Chevron Anterior (SVG chevron-left) -->
+        <a href="#" aria-label="Página anterior">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M15 6l-6 6l6 6" />
+            </svg>
+        </a>
+
+        <!-- Números de página -->
+        <a href="#">1</a>
+        <a href="#">2</a>
+        <a href="#">3</a>
+        <!-- Página 4 activa por defecto -->
+        <a class="is-active" href="#" aria-current="page">4</a>
+        <a href="#">5</a>
+        <a href="#">6</a>
+        <a href="#">7</a>
+
+        <!-- Chevron Siguiente (SVG chevron-right) -->
+        <a href="#" aria-label="Página siguiente">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M9 6l6 6l-6 6" />
+             </svg>
+        </a>
+
+        <!-- Botón Última -->
+        <a href="#" class="btn-text" aria-label="Ir a la última página">Última</a>
+
+        </nav>
+    </footer>
+</body>
+</html>
