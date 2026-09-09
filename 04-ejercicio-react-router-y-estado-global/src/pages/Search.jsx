@@ -1,151 +1,194 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router'; 
+import { JobList } from '../components/JobList';
+import { Pagination } from '../components/Pagination';
+import { SearchFormSection } from '../components/SearchForm';
+import { Spinner } from '../components/Spinner';
 
-import { Pagination } from '../components/Pagination.jsx'
-import { SearchFormSection } from '../components/SearchFormSection.jsx'
-import { JobListings } from '../components/JobListings.jsx'
-import { useRouter } from '../hooks/useRouter.jsx'
+export default function Search() {
+  const [searchParams, setSearchParams] = useSearchParams();
 
-const RESULTS_PER_PAGE = 4
-
-const useFilters = () => {
-  const [filters, setFilters] = useState(() => {
-    const params = new URLSearchParams(window.location.search)
-    return {
-      technology: params.get('technology') || '',
-      location: params.get('type') || '',
-      experienceLevel: params.get('level') || ''
-    }
-  })
+  const [jobsData, setJobsData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); 
+  const [totalResults, setTotalResults] = useState(0);
+  
   const [textToFilter, setTextToFilter] = useState(() => {
-    const params = new URLSearchParams(window.location.search)
-    return params.get('text') || ''
-  })
+    return searchParams.get('text') ?? '';
+  });
+  
   const [currentPage, setCurrentPage] = useState(() => {
-    const params = new URLSearchParams(window.location.search)
-    const page = Number(params.get('page'))
-    return Number.isNaN(page) ? page : 1
-  })
+    const pageParam = searchParams.get('page');
+    if (!pageParam) return 1;
+    const page = Number(pageParam);
+    if (Number.isNaN(page) || page < 1) return 1;
+    return page;
+  });
 
-  const [jobs, setJobs] = useState([])
-  const [total, setTotal] = useState(0)
-  const [loading, setLoading] = useState(true)
+  const [filters, setFilters] = useState(() => {
+    return {
+      technology: searchParams.get('technology') || '',
+      location: searchParams.get('type') || '',
+      experienceLevel: searchParams.get('level') || '', 
+      salary: '', 
+      contractType: searchParams.get('contractType') || ''
+    };
+  });
 
-  const { navigateTo } = useRouter()
+  const clearFilters = () => {
+    setFilters({ technology: '', location: '', experienceLevel: '', salary: '', contractType: '' });
+  };
+
+  const RESULTS_PER_PAGE = 10;
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    setCurrentPage(1);
+  }, [textToFilter, filters.technology, filters.location, filters.experienceLevel]);
 
   useEffect(() => {
     async function fetchJobs() {
       try {
-        setLoading(true)
+        setLoading(true);
+        setError(null);
+        
+        const params = new URLSearchParams();
+        if (textToFilter) params.append('text', textToFilter);
+        if (filters.technology) params.append('technology', filters.technology);
+        if (filters.location) params.append('type', filters.location);
+        if (filters.experienceLevel) params.append('level', filters.experienceLevel);
+        if (filters.contractType) params.append('contractType', filters.contractType);
+        
+        const offset = (currentPage - 1) * RESULTS_PER_PAGE;
+        params.append('limit', RESULTS_PER_PAGE);
+        params.append('offset', offset);
+        
+        const url = `https://jscamp-api.vercel.app/api/jobs?${params.toString()}`;
 
-        const params = new URLSearchParams()
-        if (textToFilter) params.append('text', textToFilter)
-        if (filters.technology) params.append('technology', filters.technology)
-        if (filters.location) params.append('type', filters.location)
-        if (filters.experienceLevel) params.append('level', filters.experienceLevel)
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+          throw new Error('No se pudo conectar con el servidor de empleos. Por favor, inténtalo más tarde.');
+        }
 
-        const offset = (currentPage - 1) * RESULTS_PER_PAGE
-        params.append('limit', RESULTS_PER_PAGE)
-        params.append('offset', offset)
-
-        const queryParams = params.toString()
-      
-        const response = await fetch(`https://jscamp-api.vercel.app/api/jobs?${queryParams}`)
-        const json = await response.json()
-
-        setJobs(json.data)
-        setTotal(json.total)
-      } catch (error) {
-        console.error('Error fetching jobs:', error)
+        const json = await response.json();
+        setJobsData(json.data);
+        setTotalResults(json.total); 
+      } catch (err) {
+        console.error('Error al cargar empleos:', err);
+        setError(!navigator.onLine ? 'No hay conexión a internet. Revisa tu red.' : err.message);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
-    fetchJobs()
-  }, [filters, currentPage, textToFilter])
+    fetchJobs();
+  }, [textToFilter, filters.technology, filters.location, filters.experienceLevel, currentPage]);
 
   useEffect(() => {
-    const params = new URLSearchParams()
+    setSearchParams((prevParams) => {
+      const params = new URLSearchParams(prevParams);
+      
+      if (textToFilter) params.set('text', textToFilter);
+      else params.delete('text');
 
-    if (textToFilter) params.append('text', textToFilter)
-    if (filters.technology) params.append('technology', filters.technology)
-    if (filters.location) params.append('type', filters.location)
-    if (filters.experienceLevel) params.append('level', filters.experienceLevel)
+      if (filters.technology) params.set('technology', filters.technology);
+      else params.delete('technology');
 
-    if (currentPage > 1) params.append('page', currentPage)
+      if (filters.location) params.set('type', filters.location);
+      else params.delete('type');
 
-    const newUrl = params.toString()
-      ? `${window.location.pathname}?${params.toString()}`
-      : window.location.pathname
+      if (filters.experienceLevel) params.set('level', filters.experienceLevel);
+      else params.delete('level');
 
-    navigateTo(newUrl)
-  }, [filters, currentPage, textToFilter, navigateTo])
+      if (filters.contractType) params.set('contractType', filters.contractType);
+      else params.delete('contractType');
+      
+      if (currentPage > 1) params.set('page', String(currentPage));
+      else params.delete('page');
 
-  const totalPages = Math.ceil(total / RESULTS_PER_PAGE)
+      return params;
+    });
+  }, [filters, textToFilter, currentPage, setSearchParams]);
 
   const handlePageChange = (page) => {
-    setCurrentPage(page)
-  }
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
-  const handleSearch = (filters) => {
-    setFilters(filters)
-    setCurrentPage(1)
-  }
+  const handleSearch = (newFilters) => {
+    setFilters(newFilters);
+  };
 
-  const handleTextFilter = (newTextToFilter) => {
-    setTextToFilter(newTextToFilter)
-    setCurrentPage(1)
-  }
+  const handleChangeText = (text) => {
+    setTextToFilter(text);
+  };
 
-  return {
-    loading,
-    jobs,
-    total,
-    totalPages,
-    currentPage,
-    textToFilter,
-    handlePageChange,
-    handleSearch,
-    handleTextFilter
-  }
-}
+  const handleReset = () => {
+    clearFilters();
+    setTextToFilter('');
+  };
 
-export function SearchPage() {
-  const {
-    jobs,
-    total,
-    loading,
-    totalPages,
-    currentPage,
-    textToFilter,
-    handlePageChange,
-    handleSearch,
-    handleTextFilter
-  } = useFilters()
+  const getPageTitle = () => {
+    if (loading) return 'Cargando empleos...';
+    if (error) return 'Error al cargar empleos';
+    if (textToFilter === '') return `${totalResults} trabajos encontrados - Página ${currentPage}`;
+    return `${totalResults} trabajos de "${textToFilter}" - Página ${currentPage}`;
+  };
 
-  const title = loading
-    ? `Cargando... - DevJobs`
-    : `Resultados: ${total}, Página ${currentPage} - DevJobs`
+  const totalPages = Math.ceil(totalResults / RESULTS_PER_PAGE);
+  const hasActiveFilters = textToFilter !== '' || Object.values(filters).some(value => value !== '');
 
   return (
-    <main>
-      <title>{title}</title>
-      <meta name="description" content="Explora miles de oportunidades laborales en el sector tecnológico. Encuentra tu próximo empleo en DevJobs." />
+    <>
+      <title>{getPageTitle()}</title>
+      <main>
+        <SearchFormSection 
+          onSearch={handleSearch} 
+          onTextFilter={handleChangeText} 
+          initialText={textToFilter}
+          onReset={handleReset}
+          hasActiveFilters={hasActiveFilters}
+        />
+        
+        <div className="results-summary" style={{ maxWidth: '1280px', margin: '1rem auto', paddingInline: '1rem' }}>
+          {!loading && !error && (
+            <p style={{ color: 'var(--text-muted)' }}>
+              Se encontraron <strong>{totalResults}</strong> trabajos
+              {textToFilter && ` para "${textToFilter}"`}
+            </p>
+          )}
+        </div>
 
-      <SearchFormSection
-        initialText={textToFilter}
-        onSearch={handleSearch}
-        onTextFilter={handleTextFilter}
-      />
-
-      <section>
-        <h2 style={{ textAlign: 'center' }}>Resultados de búsqueda</h2>
-
-        {
-          loading ? <p>Cargando empleos...</p> : <JobListings jobs={jobs} />
-        }
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-      </section>
-    </main>
-  )
+        {loading ? (
+          <Spinner />
+        ) : error ? (
+          <div style={{ textAlign: 'center', padding: '4rem 2rem', color: '#ef4444' }}>
+            <h2>⚠️ Algo salió mal</h2>
+            <p style={{ margin: '1rem 0' }}>{error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              style={{ padding: '0.75rem 1.5rem', background: '#334155', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+            >
+              Reintentar
+            </button>
+          </div>
+        ) : jobsData.length === 0 ? (
+          <p style={{ padding: '2rem', textWrap: 'balance', textAlign: 'center', color: 'var(--text-muted)' }}>
+            No se han encontrado empleos que coincidan con los criterios de búsqueda.
+          </p>
+        ) : (
+          <JobList jobs={jobsData} />
+        )}
+        
+        {!loading && !error && totalPages > 0 && (
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        )}
+      </main>
+    </>
+  );
 }
