@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export function useRouter() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);

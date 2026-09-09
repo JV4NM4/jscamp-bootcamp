@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { JobList } from '../components/JobList';
 import { Pagination } from '../components/Pagination';
 import { SearchFormSection } from '../components/SearchForm';
@@ -12,12 +12,30 @@ export function Search() {
   const [totalResults, setTotalResults] = useState(0);
   
   const [currentPage, setCurrentPage] = useState(1);
-  const [textToFilter, setTextToFilter] = useState('');
+  /* const [textToFilter, setTextToFilter] = useState(''); */
+  // Como pide la letra, vamos a leer el término de búsqueda inicial desde la URL
+  const initialParams = new URLSearchParams(window.location.search);
+  const [textToFilter, setTextToFilter] = useState(initialParams.get('text') ?? '');
   
   const INITIAL_FILTERS = { technology: '', location: '', experienceLevel: '', salary: '', contractType: '' };
   const [filters, setFilters, clearPersistedFilters] = usePersistedFilters('devjobs_filters', INITIAL_FILTERS);
 
   const RESULTS_PER_PAGE = 10;
+
+  // Con este useEffect reflejamos los filtros actuales en la URL como search params.
+  // Hicimos la el contenido del useEffect un poco complejo para que puedas leerlo y tratar de entender que hace linea por linea, cualquier duda nos puedes preguntar.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    textToFilter ? params.set('text', textToFilter) : params.delete('text');
+
+    for (const [key, value] of Object.entries(filters)) {
+      value ? params.set(key, value) : params.delete(key);
+    }
+
+    const query = params.toString();
+    window.history.replaceState({}, '', `/search${query ? `?${query}` : ''}`);
+  }, [textToFilter, filters]);
 
   useEffect(() => {
     setCurrentPage(1);
