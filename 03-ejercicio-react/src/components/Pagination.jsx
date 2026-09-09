@@ -3,7 +3,7 @@ import styles from './Pagination.module.css';
 export function Pagination({ currentPage = 1, totalPages = 5, onPageChange }) {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
-  const handlePrevious = (e) => {
+  /* const handlePrevious = (e) => {
     e.preventDefault();
     if (currentPage > 1) {
       onPageChange(currentPage - 1);
@@ -30,18 +30,25 @@ export function Pagination({ currentPage = 1, totalPages = 5, onPageChange }) {
   const styleLinkRight = {
     opacity: currentPage === totalPages ? 0.5 : 1,
     cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-  };
+  }; */
 
   return (
     <nav className={styles.pagination}>
-      <a href="#" style={styleLinkLeft} onClick={handlePrevious}>
+      {/* <a href="#" style={styleLinkLeft} onClick={handlePrevious}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <path d="M15 6l-6 6l6 6" />
         </svg>
-      </a>
+      </a> */}
+      {/* Deshabilitamos la primera página y lo hacemos con buttons para que sea mas accesible: tenemos un disabled por defecto */}
+      <button disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M15 6l-6 6l6 6" />
+        </svg>
+      </button>
 
-      {pages.map((page) => (
+      {/* {pages.map((page) => (
         <a 
           key={page} 
           className={currentPage === page ? styles.isActive : ''} 
@@ -50,14 +57,29 @@ export function Pagination({ currentPage = 1, totalPages = 5, onPageChange }) {
         >
           {page}
         </a>
+      ))} */}
+      {pages.map((page) => (
+        <button
+          key={page}
+          className={currentPage === page ? styles.isActive : ''}
+          onClick={() => onPageChange(page)}
+        >
+          {page}
+        </button>
       ))}
 
-      <a href="#" style={styleLinkRight} onClick={handleNext}>
+      {/* <a href="#" style={styleLinkRight} onClick={handleNext}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <path d="M9 6l6 6l-6 6" />
         </svg>
-      </a>
+      </a> */}
+      <button disabled={currentPage === totalPages} onClick={() => onPageChange(currentPage + 1)}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M9 6l6 6l-6 6" />
+        </svg>
+      </button>
     </nav>
   );
 }

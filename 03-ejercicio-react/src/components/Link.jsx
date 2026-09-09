@@ -8,15 +8,20 @@ export function Link({
   exact = true, 
   ...props 
 }) {
-  const { currentPath } = useRouter();
+  const { currentPath, navigateTo } = useRouter();
 
-  const handleClick = (event) => {
+  /* const handleClick = (event) => {
     event.preventDefault();
     
     window.history.pushState({}, '', href);
     
     const navigationEvent = new PopStateEvent('popstate');
     window.dispatchEvent(navigationEvent);
+  }; */
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    navigateTo(href); // Delegamos la navegación en el hook, sin duplicar lógica
   };
 
   const isActive = exact 
