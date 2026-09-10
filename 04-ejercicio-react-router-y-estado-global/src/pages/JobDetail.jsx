@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react"
-import { useParams, useNavigate } from "react-router"
-import { Link } from "react-router"
+import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router"
 import snarkdown from 'snarkdown'
+// Vamos a usar nuestro Link modificado
+import { Link } from '../components/Link'
+import { useAuthStore } from '../store/authStore.js'
+import { useFavoritesStore } from '../store/favoritesStore.js'
 import styles from './Detail.module.css'
-import { useAuthStore } from '../store/authStore.js';
-import { useFavoritesStore } from '../store/favoritesStore.js';
 
 function JobSection ({ title, content }) {
   const html = snarkdown(content || '')
@@ -81,18 +82,20 @@ function DetailApplyButton () {
 function DetailFavoriteButton ({ jobId }) {
   const isLoggedIn = useAuthStore(state => state.isLoggedIn)
   
-  const favorites = useFavoritesStore(state => state.favorites)
-  const toggleFavorite = useFavoritesStore(state => state.toggleFavorite)
+  // La linea de abajo no se usaba y causaba re-render en cualquier cambio de favoritos
+  // const favorites = useFavoritesStore(state => state.favorites)
   const isFavorite = useFavoritesStore(state => state.isFavorite)
+  const isFav = isFavorite(jobId)
+  const toggleFavorite = useFavoritesStore(state => state.toggleFavorite)
 
   return (
     <button
       disabled={!isLoggedIn}
       onClick={() => toggleFavorite(jobId)}
-      aria-label={isFavorite(jobId) ? 'Remove from favorites' : 'Add to favorites'}
+      aria-label={isFav ? 'Remove from favorites' : 'Add to favorites'}
       style={{ marginBottom: '3rem'}}
     >
-      {isFavorite(jobId) ? '❤️' : '🤍'}
+      {isFav ? '❤️' : '🤍'}
     </button>
   )
 }
@@ -108,8 +111,12 @@ export default function JobDetail () {
   useEffect(() => {
     fetch(`https://jscamp-api.vercel.app/api/jobs/${jobId}`)
       .then(response => {
+        /* 
+        Antes usando `navigate('/not-found')` sin return, se seguía ejecutando response.json() con la respuesta de error.
+        Ahora simplemente enviamos un `throw` con el mensaje del error para que el catch lo maneje.
+        */
         if (!response.ok) {
-          navigate('/not-found')
+          throw new Error('Oferta no encontrada') // el catch ya renderiza el estado de error
         }
 
         return response.json()
