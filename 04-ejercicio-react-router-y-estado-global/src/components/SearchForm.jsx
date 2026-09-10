@@ -1,7 +1,8 @@
-import { useId, useState, useRef } from "react";
+import { useId, useRef, useState } from "react";
 import { useSearchForm } from "../hooks/useSearchForm";
 
-export function SearchFormSection ({ onTextFilter, onSearch, initialText, onReset, hasActiveFilters }) {
+/* Recibimos los `filters` */
+export function SearchFormSection ({ onTextFilter, onSearch, initialText, onReset, hasActiveFilters, filters = {} }) {
   const idText = useId();
   const idTechnology = useId();
   const idLocation = useId();
@@ -18,6 +19,7 @@ export function SearchFormSection ({ onTextFilter, onSearch, initialText, onRese
     handleTextChange
   } = useSearchForm({ idTechnology, idLocation, idExperienceLevel, idSalary, idContractType, idText, onSearch, onTextFilter });
 
+  /* Ojo que esta función no se usa */
   const handleClearInput = (event) => {
     event.preventDefault();
     inputRef.current.value = "";
@@ -74,6 +76,8 @@ export function SearchFormSection ({ onTextFilter, onSearch, initialText, onRese
           <select 
             name={idTechnology} 
             id="filter-technology"
+            key={filters.technology ?? ''} // fuerza a re-montar el select con el valor de la URL al cargar. La propiedad `key` lo que hace es re-montar el componente cuando su valor cambia. Es muy útil en algunos casos
+            defaultValue={filters.technology ?? ''} // muestra el filtro de la URL como seleccionado al recargar
             onFocus={() => setFocusedField('technology')}
             onBlur={() => setFocusedField(null)}
           >
@@ -97,6 +101,8 @@ export function SearchFormSection ({ onTextFilter, onSearch, initialText, onRese
           <select 
             name={idLocation} 
             id="filter-location"
+            key={filters.location ?? ''}
+            defaultValue={filters.location ?? ''}
             onFocus={() => setFocusedField('location')}
             onBlur={() => setFocusedField(null)}
           >
@@ -111,6 +117,8 @@ export function SearchFormSection ({ onTextFilter, onSearch, initialText, onRese
           <select 
             name={idExperienceLevel} 
             id="filter-experience-level"
+            key={filters.experienceLevel ?? ''}
+            defaultValue={filters.experienceLevel ?? ''}
             onFocus={() => setFocusedField('experienceLevel')}
             onBlur={() => setFocusedField(null)}
           >
@@ -126,6 +134,8 @@ export function SearchFormSection ({ onTextFilter, onSearch, initialText, onRese
             <select 
               name={idContractType} 
               id={idContractType}
+              key={filters.contractType ?? ''}
+              defaultValue={filters.contractType ?? ''}
               onFocus={() => setFocusedField('contractType')}
               onBlur={() => setFocusedField(null)}
             >
