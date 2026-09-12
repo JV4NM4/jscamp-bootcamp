@@ -1,9 +1,10 @@
-import { readdir, stat } from 'node:fs/promises'
-import { join } from 'node:path'
+import { readdir, stat } from 'node:fs/promises';
+import { join } from 'node:path';
 
 
 //4.- Comprobación de permisos de lectura del directorio
 
+// Excelente! Una alternativa más corta es !process.permission?.has('fs.read') con `.?`
 if (process.permission && !process.permission.has('fs.read')) {
   console.error('Error: No tiene permisos para leer este directorio. Use --allow-fs-read="*"');
   process.exit(1);
@@ -39,7 +40,7 @@ let entries = await Promise.all(
         return {
             name,
             isDir: info.isDirectory(),
-            size: formatBytes(info.size),
+            size: info.size, // No hacemos el format aquí. Lo haremos más adelante cuando sepamos que la entry es un file y no un folder
         }
     })
 );
@@ -49,17 +50,16 @@ if (onlyFiles) entries = entries.filter(e => !e.isDir);
 if (onlyDirs) entries = entries.filter(e => e.isDir);
 
 // Orden
-if (isAsc) {
+if (isAsc || isDesc) {
     entries.sort((a, b) => {
-        if (a.name < b.name) return -1; // "a" va antes
-        if (a.name > b.name) return 1;  // "b" va antes
-        return 0;                       // Son iguales
+        const cmp = a.name.localeCompare(b.name);
+        return isDesc ? -cmp : cmp; // invierte el signo para descendente. No estaba funcionando con ese flag
     });
 }
 
 // Renderizado
 for (const entry of entries) {
     const icon = entry.isDir ? '📁' : '📄';
-    const size = entry.isDir ? '-' : `${entry.size}`;
+    const size = entry.isDir ? '-' : formatBytes(entry.size); // Aquí si ejecutamos el formatBytes
     console.log(`${icon.padEnd(3)} ${entry.name.padEnd(25)} ${size}`);
 }
