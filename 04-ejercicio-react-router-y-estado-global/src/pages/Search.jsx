@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router'; 
+import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router';
 import { JobList } from '../components/JobList';
 import { Pagination } from '../components/Pagination';
 import { SearchFormSection } from '../components/SearchForm';
@@ -148,6 +148,7 @@ export default function Search() {
       <title>{getPageTitle()}</title>
       <main>
         <SearchFormSection 
+          filters={filters} // Al recargar la pagina los select no estan mostrando los filtros de la URL. Pasamos los valores de filtros de URL para mostrarlos
           onSearch={handleSearch} 
           onTextFilter={handleChangeText} 
           initialText={textToFilter}

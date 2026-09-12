@@ -1,8 +1,8 @@
-import { useState } from "react"
-import { Link } from "react-router" 
-import { useFavoritesStore } from '../store/favoritesStore.js';
+import { useState } from "react";
+import { Link } from '../components/Link';
 import { useAuthStore } from '../store/authStore.js';
-import styles from './JobCard.module.css'
+import { useFavoritesStore } from '../store/favoritesStore.js';
+import styles from './JobCard.module.css';
 
 function JobCardApplyButton ({ jobId }) {
   const [isApplied, setIsApplied] = useState(false)
@@ -28,17 +28,17 @@ function JobCardApplyButton ({ jobId }) {
 function JobCardFavoriteButton({ jobId }) { 
   const isLoggedIn = useAuthStore(state => state.isLoggedIn)
   
-  const favorites = useFavoritesStore(state => state.favorites)
-  const toggleFavorite = useFavoritesStore(state => state.toggleFavorite)
   const isFavorite = useFavoritesStore(state => state.isFavorite)
+  const isFav = isFavorite(jobId)
+  const toggleFavorite = useFavoritesStore(state => state.toggleFavorite)
 
   return (
     <button
       disabled={!isLoggedIn}
       onClick={() => toggleFavorite(jobId)}
-      aria-label={isFavorite(jobId) ? 'Remove from favorites' : 'Add to favorites'}
+      aria-label={isFav ? 'Remove from favorites' : 'Add to favorites'}
     >
-      {isFavorite(jobId) ? '❤️' : '🤍'}
+      {isFav ? '❤️' : '🤍'}
     </button>
   );
 }
