@@ -1,11 +1,101 @@
 import { createServer } from 'node:http'
+import { randomUUID } from 'node:crypto'
+import { json } from 'node:stream/consumers'
 
 process.loadEnvFile()
 
 const port = process.env.PORT || 3000
 
-const server = createServer((req, res) => {
+const server = createServer(async(req, res) => {
   // TODO: Aquí irá la lógica del servidor
+
+const { url, method } = req
+
+const requestUrl = new URL(url, `http://${req.headers.host}`)
+
+const pathname = requestUrl.pathname
+  // 1. GET
+ 
+  if (pathname === '/users' && method === 'GET') {
+    
+    let filteredUsers = users
+    const name = requestUrl.searchParams.get('name')
+    
+    if (name) {
+      filteredUsers = users.filter(user =>
+        user.name.toLowerCase().includes(name.toLowerCase())
+      )
+    }
+    //Filtro de Edad
+
+    const  minAge = requestUrl.searchParams.get('minAge')
+    const maxAge = requestUrl.searchParams.get('maxAge')
+
+    if (minAge) {
+      filteredUsers = filteredUsers.filter( user => user.age >= Number(minAge))
+    }
+
+    if (maxAge) {
+      filteredUsers = filteredUsers.filter(user => user.age <= Number(maxAge))
+    }
+
+    //Filtro de paginación
+
+    const limit = requestUrl.searchParams.get('limit')
+    const offset = requestUrl.searchParams.get('offset')
+
+    if (limit || offset ) {
+
+      const start = offset ? Number(offset) : 0
+      const end = limit ? start + Number(limit) : filteredUsers.length
+      filteredUsers = filteredUsers.slice (start, end)
+    }
+
+    res.statusCode = 200
+    res.setHeader('Content-Type', 'application/json; charset=utf-8')
+    return res.end(JSON.stringify(filteredUsers))
+  }
+
+  // 2. POST
+
+  if (pathname === '/users' && method === 'POST') {
+
+    const body = await json(req)
+    
+    const { name, age } = body
+
+    const newUser = {
+      id: randomUUID(),
+      name: name,
+      age: age
+    }
+
+    users.push(newUser)
+
+    res.statusCode = 201
+    res.setHeader('Content-Type', 'application/json; charset=utf-8')
+    return res.end(JSON.stringify(newUser))
+  }
+
+  // 3. HEALTH
+
+  if (pathname === '/health' && method === 'GET') {
+    res.statusCode = 200
+    res.setHeader('Content-Type', 'application/json; charset=utf-8')
+
+    const healthInfo = {
+      status: 'ok',
+      uptime: process.uptime()
+    }  
+    
+    return res.end(JSON.stringify(healthInfo))
+  }
+
+  // 4. Ruta no encontrada
+
+  res.statusCode = 404
+  res.setHeader('Content-Type', 'application/json; charset=utf-8')
+  return res.end(JSON.stringify({ error: 'Ruta no encontrada' }))
 })
 
 server.listen(port, () => {
