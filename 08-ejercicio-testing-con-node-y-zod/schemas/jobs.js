@@ -8,3 +8,28 @@
  * - Usar safeParse() para validar sin lanzar excepciones
  * - Definir reglas de validación (min, max, required, optional, etc.)
  */
+import { z } from 'zod'
+
+const jobSchema = z.object({
+  titulo: z.string({
+    invalid_type_error: 'El título debe ser un texto',
+    required_error: 'El título es obligatorio'
+  }).min(3).max(100),
+  empresa: z.string(),
+  ubicacion: z.string(),
+  descripcion: z.string().optional(),
+  data: z.object({
+    technology: z.array(z.string()),
+    modalidad: z.string().optional(),
+    nivel: z.string().optional()
+  }).optional(),
+  content: z.record(z.any()).optional() 
+})
+
+export function validateJob(input) {
+  return jobSchema.safeParse(input)
+}
+
+export function validatePartialJob(input) {
+  return jobSchema.partial().safeParse(input)
+}
