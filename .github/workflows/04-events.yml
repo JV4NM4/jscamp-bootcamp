@@ -27,4 +27,4 @@ jobs:
                 GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 ISSUE_NUMBER: ${{ github.event.issue.number }}
               run:
-                gh issue comment "$ISSUE_NUMBER" --body "Gracias por tu aporte. Nos pondremos en contacto contigo pronto. --repo $GITHUB_REPOSITORY"
+                gh issue comment "$ISSUE_NUMBER"  --repo $GITHUB_REPOSITORY --body "Gracias por tu aporte. Nos pondremos en contacto contigo pronto."
