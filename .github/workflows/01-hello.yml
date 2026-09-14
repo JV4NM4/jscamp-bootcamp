@@ -5,17 +5,27 @@ on:
         branches: [main]
 
 jobs:
-    hello:
-        runs-on: ubuntu-24.04
-        steps:
-            - name: Saludar
-              run: echo "Hola, desde GitHub Actions!"
+  hello:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Saludar
+        run: echo "Hola, desde GitHub Actions!"
 
-            - name: Ver fecha del runner
-              run: date
+      - name: Ver fecha del runner
+        run: date
 
-            - name: Ver archivos disponibles
-              run: ls -la
+      - name: Ver archivos disponibles
+        run: ls -la
+
+  repo-files:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Descargar código del repo
+        uses: actions/checkout@v6
+      
+      - name: Ver archivos disponibles
+        run: ls -la
+        
        
               
         
