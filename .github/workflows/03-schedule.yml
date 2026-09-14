@@ -1,0 +1,21 @@
+name: 03 - Schedule
+
+on:
+    workflow_dispatch:
+
+    schedule:
+        - cron: '0  9 * * 1'  
+        #Explicación del cron '0  9 * * 1':
+        
+            # 1º campo (0): Minuto cero. La primera posición corresponde a los minutos
+            # 2º campo (9): Hora 9am. La segunda posición corresponde a las horas
+            # 3º campo (*): Cualquier día del mes. La tercera posición corresponde a los días del mes
+            # 4º campo (*): Cualquier mes. La cuarta posición corresponde a los meses
+            # 5º campo (1): Lunes. La quinta posición corresponde a los días de la semana
+    
+jobs:
+    schedule:
+        runs-on: ubuntu-24.04
+        steps:
+            - name: Saludar
+              run: echo "Hola desde GitHub Actions!"
