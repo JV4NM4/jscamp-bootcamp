@@ -47,4 +47,4 @@ jobs:
 
       - name: Dry run
         if: ${{ inputs.dry_run == true }}
-        run: echo "Simulando el despliegue (Dry run activado)"
+        run: echo "Simulando el despliegue. (Dry run activado)"
