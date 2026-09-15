@@ -1,0 +1,50 @@
+name: 02 - Manual
+
+on:
+  workflow_dispatch:
+    inputs:
+      logging_level:
+        description: 'Nivel de log'
+        required: true
+        default: 'info'
+        type: string
+      environment:
+        description: 'Entorno de despliegue'
+        required: true
+        type: string
+      dry_run:
+        description: 'Ejecutar sin aplicar cambios'
+        required: true
+        default: false
+        type: boolean
+      reason:
+        description: 'Motivo de la ejecución'
+        required: false
+        default: 'Manual execution'
+        type: string
+
+jobs:
+  manual-execution:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Imprimir inputs
+        env:
+          LOG_LEVEL: ${{ inputs.logging_level }}
+          ENV_NAME: ${{ inputs.environment }}
+          DRY_RUN_STATUS: ${{ inputs.dry_run }}
+          REASON_TEXT: ${{ inputs.reason }}
+        run: |
+          echo "Logging Level: $LOG_LEVEL"
+          echo "Environment: $ENV_NAME"
+          echo "Dry Run: $DRY_RUN_STATUS"
+          echo "Reason: $REASON_TEXT"
+
+      - name: Deploy
+        if: ${{ inputs.dry_run == false }}
+        env:
+          ENV_NAME: ${{ inputs.environment }}
+        run: echo "Deploying to $ENV_NAME"
+
+      - name: Dry run
+        if: ${{ inputs.dry_run == true }}
+        run: echo "Simulando el despliegue. (Dry run activado)"
