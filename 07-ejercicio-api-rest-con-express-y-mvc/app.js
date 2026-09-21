@@ -1,9 +1,9 @@
 import express from 'express'
-import { jobsRouter } from './routes/jobs.js'
 import { DEFAULTS } from './config.js'
 import { corsMiddleware } from './middlewares/cors.js'
+import { jobsRouter } from './routes/jobs.js'
 
-const PORT = 3000
+const { PORT } = DEFAULTS // Ya que lo tenemos, podemos usar la variable en DEFAULTS
 const app = express()
 
 app.use(corsMiddleware())
