@@ -1,5 +1,5 @@
 import crypto from 'node:crypto'
-import type { Job, CreateJobDTO, UpdateJobDTO, JobFilters } from '../types'
+import type { CreateJobDTO, Job, JobFilters, UpdateJobDTO } from '../types'
 //1. Importar base de datos
 import { db } from '../db/database'
 
@@ -18,7 +18,10 @@ export class JobModel {
   const params: unknown[] = []
 
   if (filters?.tech) {
-      conditions.push(`jt.technology = ?`)
+      // conditions.push(`jt.technology = ?`)
+      // params.push(filters.tech)
+      // Filtramos con subconsulta para no perder las demás tecnologías en el GROUP_CONCAT
+      conditions.push(`j.id IN (SELECT job_id FROM job_technologies WHERE technology = ?)`)
       params.push(filters.tech)
     }
 
@@ -175,6 +178,8 @@ export class JobModel {
 
     transaction()
   
-    return null
+    // return null
+    // Devolvemos el job actualizado. Null solo pasa cuando no existe el id
+    return updatedJob
   }
 }
