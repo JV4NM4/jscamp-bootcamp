@@ -202,7 +202,9 @@ form span {
   flex-shrink: 0;
 }
 
-form input[type="text"] {
+/* Incluimos input[type="search"] porque el buscador de la home ahora usa ese type */
+form input[type="text"],
+form input[type="search"] {
   flex: 1;
   background: transparent;
   border: none;
