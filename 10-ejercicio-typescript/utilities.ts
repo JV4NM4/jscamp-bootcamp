@@ -22,7 +22,9 @@ export function getJobSummaries(jobs: Job[]): JobSummary[] {
   }))
 }
 
-export type ReadonlyJob = string
+// export type ReadonlyJob = string
+// ReadonlyJob es un Job al que no le puedes cambiar las propiedades
+export type ReadonlyJob = Readonly<Job>
 
 export function displayJob(job: Readonly<Job>): void {
   console.log(`${job.title} - ${job.company}`)
