@@ -1,7 +1,9 @@
 /* Aquí irá tu código del segundo ejercicio */
 
-import  { db } from './database';
 import jobsData from '../jobs.json';
+import { db } from './database';
+// crypto nos deja generar ids únicos para el contenido que no tiene id en el JSON
+import crypto from 'node:crypto';
 
 //1. Crear las tablas
 
@@ -83,7 +85,7 @@ const runSeed = db.transaction((jobs: any[]) => {
     // 3. Insertar  contenido extra si lo tiene el JSON 
     if (job.content) {
       insertContent.run(
-        job.content.id,
+        crypto.randomUUID(),
         job.id,
         job.content.description,
         job.content.responsibilities,
