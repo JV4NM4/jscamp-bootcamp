@@ -22,7 +22,8 @@ const jobSchema = z.object({
     technology: z.array(z.string()),
     modalidad: z.string().optional(),
     nivel: z.string().optional()
-  }).optional(),
+  // }).optional(),
+  }), // El campo data es requerido
   content: z.record(z.any()).optional() 
 })
 

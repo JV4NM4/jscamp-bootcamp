@@ -8,9 +8,13 @@
  * - Verificar validaciones con Zod
  * - Comprobar códigos de estado HTTP correctos
  */
-import test, { describe, before, after } from 'node:test'
 import assert from 'node:assert/strict'
-import  app  from './app.js'
+import test, { after, before, describe } from 'node:test'
+// import  app  from './app.js'
+
+// Hola! Hay un detalle en importar `app` de la manera anterior. Si `NODE_ENV` no está definido, se rompen los tests, así que vamos a importarlo de esta manera: asignamos NODE_ENV y luego asíncronicamente importamos app
+process.env.NODE_ENV = 'test'
+const { default: app } = await import('./app.js')
 
 const PORT = 5678
 const baseURL = `http://localhost:${PORT}`
@@ -30,12 +34,24 @@ after(async () => {
   })
 })
 
+// EXTRA: Todo lo que se repite en los tests lo podemos pasar a una variable y reutilizarla:
+const handleGetResponseAndCheckStatus = async (path, expectedStatus = 200) => {
+  // 1. Normaliza el path (si no comienza con /)
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`
+  // 2. Hace la petición
+  const res = await fetch(`${baseURL}${normalizedPath}`)
+  // 3. Comprueba el status
+  assert.strictEqual(res.status, expectedStatus)
+  // 4. Devuelve el JSON
+  const json = await res.json()
+  return json
+}
+
 describe('GET /jobs', () => {
   test('Debe responder con 200 y un array de trabajos', async () => {
-    const res = await fetch(`${baseURL}/jobs`)
-    assert.strictEqual(res.status, 200)
-    const json = await res.json()
-    assert.ok(Array.isArray(json.data), 'json.data debe ser un array')
+    // De esta manera podemos simplificar mucho la lectura de los tests. Es opcional, pero te lo dejo como alternativa
+    const { data } = await handleGetResponseAndCheckStatus('/jobs')
+    assert.ok(Array.isArray(data), 'json.data debe ser un array')
   })
 
   test('Debe filtrar trabajos por tecnología (react)', async () => {
@@ -175,7 +191,8 @@ describe('PUT /jobs/:id', () => {
     const res = await fetch(`${baseURL}/jobs/id-inventado-123`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ titulo: "Fail", empresa: "Fail", ubicacion: "Fail" })
+      // body: JSON.stringify({ titulo: "Fail", empresa: "Fail", ubicacion: "Fail" })
+      body: JSON.stringify({ titulo: "Fail", empresa: "Fail", ubicacion: "Fail", data: { technology: ["fail"] } }) // Body válido: sin data el middleware responde 400 antes de llegar al 404 del ID inexistente
     })
     assert.strictEqual(res.status, 404)
   })
