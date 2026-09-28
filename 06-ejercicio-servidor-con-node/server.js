@@ -1,5 +1,5 @@
-import { createServer } from 'node:http'
 import { randomUUID } from 'node:crypto'
+import { createServer } from 'node:http'
 import { json } from 'node:stream/consumers'
 
 process.loadEnvFile()
@@ -9,17 +9,20 @@ const port = process.env.PORT || 3000
 const server = createServer(async(req, res) => {
   // TODO: Aquí irá la lógica del servidor
 
-const { url, method } = req
-
-const requestUrl = new URL(url, `http://${req.headers.host}`)
-
-const pathname = requestUrl.pathname
+// const { url, method } = req
+const { method } = req
+// const requestUrl = new URL(url, `http://${req.headers.host}`)
+// const pathname = requestUrl.pathname
+// Podemos extraer la ruta (pathname) y los query params (searchParams) en una sola línea
+const { pathname, searchParams } = new URL(req.url, `http://${req.headers.host}`)
   // 1. GET
  
   if (pathname === '/users' && method === 'GET') {
     
     let filteredUsers = users
-    const name = requestUrl.searchParams.get('name')
+    // searchParams ya viene del new URL de arriba, ya no hace falta requestUrl
+    // const name = requestUrl.searchParams.get('name')
+    const name = searchParams.get('name')
     
     if (name) {
       filteredUsers = users.filter(user =>
@@ -28,8 +31,10 @@ const pathname = requestUrl.pathname
     }
     //Filtro de Edad
 
-    const  minAge = requestUrl.searchParams.get('minAge')
-    const maxAge = requestUrl.searchParams.get('maxAge')
+    // const  minAge = requestUrl.searchParams.get('minAge')
+    const minAge = searchParams.get('minAge')
+    // const maxAge = requestUrl.searchParams.get('maxAge')
+    const maxAge = searchParams.get('maxAge')
 
     if (minAge) {
       filteredUsers = filteredUsers.filter( user => user.age >= Number(minAge))
@@ -41,10 +46,16 @@ const pathname = requestUrl.pathname
 
     //Filtro de paginación
 
-    const limit = requestUrl.searchParams.get('limit')
-    const offset = requestUrl.searchParams.get('offset')
+    // const limit = requestUrl.searchParams.get('limit')
+    const limit = searchParams.get('limit')
+    // const offset = requestUrl.searchParams.get('offset')
+    const offset = searchParams.get('offset')
 
-    if (limit || offset ) {
+    // Con esto validamos de que sean numeros enteros, positivos y diferentes de NaN, Infinity, -Infinity
+    const isValidLimit = Number.isInteger(Number(limit)) && Number(limit) > 0
+    const isValidOffset = Number.isInteger(Number(offset)) && Number(offset) >= 0
+
+    if (isValidLimit || isValidOffset ) {
 
       const start = offset ? Number(offset) : 0
       const end = limit ? start + Number(limit) : filteredUsers.length
@@ -66,8 +77,11 @@ const pathname = requestUrl.pathname
 
     const newUser = {
       id: randomUUID(),
-      name: name,
-      age: age
+      // name: name,
+      // age: age
+      // Shorthand: si la clave y la variable se llaman igual, se escribe una sola vez
+      name,
+      age
     }
 
     users.push(newUser)
