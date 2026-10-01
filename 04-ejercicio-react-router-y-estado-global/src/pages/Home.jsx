@@ -55,10 +55,11 @@ export default function Home() {
             </svg>
             
             {/* 4. Añade name="search" al input */}
+            {/* type="search" le da el rol accesible 'searchbox' al input, necesario para los tests */}
             <input
               name="search"
               required
-              type="text"
+              type="search"
               placeholder="Buscar empleos por título, habilidad o empresa"
             />
             <button type="submit">Buscar</button>

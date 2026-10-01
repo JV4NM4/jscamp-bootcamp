@@ -72,9 +72,17 @@ function DetailApplyButton () {
 
   const isLoggedIn = useAuthStore(state => state.isLoggedIn)
 
+  // Guarda si ya aplicaste a la oferta, igual que hace el botón de las tarjetas del listado
+  const [isApplied, setIsApplied] = useState(false)
+
+  // Al hacer clic marcamos la oferta como aplicada
+  const handleApplyClick = () => setIsApplied(true)
+
   return (
-    <button disabled={!isLoggedIn} className={styles.applyButton}>
-      {isLoggedIn ? "Aplicar ahora" : "Inicia sesión para aplicar"}
+    // <button disabled={!isLoggedIn} className={styles.applyButton}>
+    <button disabled={!isLoggedIn} className={styles.applyButton} onClick={handleApplyClick}>
+      {/* {isLoggedIn ? "Aplicar ahora" : "Inicia sesión para aplicar"} */}
+      {isApplied ? "Aplicado" : isLoggedIn ? "Aplicar ahora" : "Inicia sesión para aplicar"}
     </button>
   )
 }

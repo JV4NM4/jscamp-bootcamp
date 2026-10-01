@@ -9,9 +9,11 @@ export function Pagination({ currentPage = 1, totalPages = 5, onPageChange }) {
     <nav className={styles.pagination} aria-label="Paginación">
       
       {/* Flecha Anterior */}
+      {/* aria-label: el botón solo tiene un SVG y necesita nombre accesible para tests y lectores de pantalla */}
       <button 
         disabled={currentPage === 1} 
         onClick={() => onPageChange(currentPage - 1)}
+        aria-label="Página anterior"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -32,9 +34,11 @@ export function Pagination({ currentPage = 1, totalPages = 5, onPageChange }) {
       ))}
 
       {/* Flecha Siguiente */}
+      {/* aria-label: mismo motivo que el botón anterior, el SVG solo no tiene nombre accesible */}
       <button 
         disabled={currentPage === totalPages} 
         onClick={() => onPageChange(currentPage + 1)}
+        aria-label="Página siguiente"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />

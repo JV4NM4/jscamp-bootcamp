@@ -73,9 +73,11 @@ export function SearchFormSection ({ onTextFilter, onSearch, initialText, onRese
         )}
 
         <div className="search-filters">
+          {/* aria-label: el select no tiene <label>, así lo encuentran getByLabel/getByRole en los tests */}
           <select 
             name={idTechnology} 
             id="filter-technology"
+            aria-label="Tecnología"
             key={filters.technology ?? ''} // fuerza a re-montar el select con el valor de la URL al cargar. La propiedad `key` lo que hace es re-montar el componente cuando su valor cambia. Es muy útil en algunos casos
             defaultValue={filters.technology ?? ''} // muestra el filtro de la URL como seleccionado al recargar
             onFocus={() => setFocusedField('technology')}
@@ -101,6 +103,7 @@ export function SearchFormSection ({ onTextFilter, onSearch, initialText, onRese
           <select 
             name={idLocation} 
             id="filter-location"
+            aria-label="Ubicación"
             key={filters.location ?? ''}
             defaultValue={filters.location ?? ''}
             onFocus={() => setFocusedField('location')}
@@ -117,6 +120,7 @@ export function SearchFormSection ({ onTextFilter, onSearch, initialText, onRese
           <select 
             name={idExperienceLevel} 
             id="filter-experience-level"
+            aria-label="Nivel de experiencia"
             key={filters.experienceLevel ?? ''}
             defaultValue={filters.experienceLevel ?? ''}
             onFocus={() => setFocusedField('experienceLevel')}
