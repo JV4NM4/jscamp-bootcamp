@@ -18,8 +18,10 @@ jobs:
             - name: Inspect event
               run: |
                 echo "Event name: ${{ github.event_name }}"
-                echo "Event type: ${{ github.event.issue.type }}"
-                echo "Event action: ${{ github.event.action }}"
+                # echo "Event type: ${{ github.event.issue.type }}" # "type" no existe en la issue, por eso fallaba
+                echo "Issue number: ${{ github.event.issue.number }}" # Imprime el número de la issue como pide la letra
+                # echo "Event action: ${{ github.event.action }}"
+                echo "Comment body: ${{ github.event.comment.body }}" # Imprime el cuerpo del comentario (vacío si no hay comentario)
             
             - name: Comentar como bot en GitHub Actions
               if: github.event_name == 'issues' && github.event.action == 'opened'
